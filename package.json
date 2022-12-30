@@ -1,5 +1,5 @@
 {
-  "name": "meteor-wallet",
+  "name": "chrysalis",
   "private": true,
   "scripts": {
     "start": "meteor --exclude-archs web.browser.legacy,web.cordova --settings private/env/dev/settings.json"

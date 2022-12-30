@@ -26,7 +26,6 @@ export const ForgotPassword = () => {
       }
       setEmail('');
       setError(null);
-      //openAlert('You should receive a reset email shortly!');
       setSuccess(true);
       setTimeout(() => {setSuccess(false);},5000);
     });
@@ -59,10 +58,10 @@ export const ForgotPassword = () => {
         </div>
         <div className="flex justify-center py-3">
           <button
-            onClick={() => navigate(RoutePaths.ACCESS)}
+            onClick={() => navigate(RoutePaths.SIGNIN)}
             className="inline-flex  justify-center rounded-md border border-gray-300 py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
           >
-            Back to Access
+            Back to Sign In
           </button>
 
           <button
