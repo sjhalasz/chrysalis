@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Transact } from './Transact';
+import { Story } from './Story';
 import { NotFound } from './NotFound';
 import { SignIn } from './SignIn';
 import { SignUp } from './SignUp';
@@ -12,6 +13,7 @@ import { AnonymousOnly } from './components/AnonymousOnly';
 import { RemoveTransaction } from './RemoveTransaction';
 import { AdminOnly } from './components/AdminOnly';
 import { Home } from './Home';
+import { PublisherOnly} from './components/PublisherOnly';
 
 export const Router = () => (
   <Routes>
@@ -27,6 +29,14 @@ export const Router = () => (
         <LoggedUserOnly>
           <Transact />
         </LoggedUserOnly>
+      }
+    />
+ <Route
+      path={RoutePaths.STORY}
+      element={
+        <PublisherOnly>
+          <Story />
+        </PublisherOnly>
       }
     />
     <Route

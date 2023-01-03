@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { RoutePaths } from './RoutePaths';
 import { useLoggedUser } from 'meteor/quave:logged-user-react';
 
@@ -21,6 +21,10 @@ export const Header = () => {
                 <img className="h-10 w-auto" src="/images/logo.png" alt="" />
               </a>
             </div>
+            <p className="text-white"
+                onClick={() => navigate(RoutePaths.STORY)}>
+                  Stories
+              </p>
             <div>
               {!isLoadingLoggedUser && !loggedUser && (
                 <>
@@ -40,12 +44,17 @@ export const Header = () => {
               </>
             )}
               {!isLoadingLoggedUser && loggedUser && (
-                <button
+              <>
+              <div className="text-white">
+                {loggedUser.username}
+              </div>
+              <button
                   className="font-bold text-white"
                   onClick={() => Meteor.logout()}
                 >
                   Log Out
                 </button>
+              </>
               )}
             </div>
           </div>
