@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { RoutePaths } from './RoutePaths';
 import { useNavigate } from 'react-router-dom';
@@ -14,10 +13,19 @@ export const SignUp = () => {
 
   const signUp = (e) => {
     e.preventDefault();
-    Accounts.createUser({ email, password, username }, (err) => {
+    if (!username) {
+      setError('User name is required.')
+    }
+    else if (!email) {
+      setError('Email is required.')
+    }
+    else if (!password) {
+      setError('Password is required.')
+    }
+  else Accounts.createUser({ email, password, username }, (err) => {
       if (err) {
-        console.error('Error creating user', err);
-        setError(err);
+
+        setError(err.reason||"Unkown error.");
         return;
       }
       navigate(RoutePaths.HOME);
@@ -30,7 +38,7 @@ export const SignUp = () => {
       <h3 className="px-3 py-2 text-lg text-base font-medium">
         Sign Up
       </h3>
-      {<ErrorAlert message = {error && (error.reason || 'Unknown error') || '' }/> }
+      {<ErrorAlert message = {error}/> }
       <form className="mt-6 flex flex-col">
         <div className="flex flex-col space-y-4">
         <div className="">
@@ -91,6 +99,7 @@ export const SignUp = () => {
               onClick={signUp}
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+              autoFocus
             >
               Sign Up
             </button>

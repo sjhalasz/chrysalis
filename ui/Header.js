@@ -21,10 +21,12 @@ export const Header = () => {
                 <img className="h-10 w-auto" src="/images/logo.png" alt="" />
               </a>
             </div>
-            <p className="text-white"
+            {!isLoadingLoggedUser && loggedUser && (
+            <a className="text-white cursor-pointer text-slate-200 hover:text-white"
                 onClick={() => navigate(RoutePaths.STORY)}>
                   Stories
-              </p>
+              </a>
+            )}
             <div>
               {!isLoadingLoggedUser && !loggedUser && (
                 <>

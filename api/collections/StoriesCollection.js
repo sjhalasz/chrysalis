@@ -10,16 +10,14 @@ const StoriesSchema = new SimpleSchema({
     defaultValue: "",
   },
 
-  text: {
+  trimmedTitle: {
     type: String,
     defaultValue: "",
   },
 
-  year: {
-    type: Number,
-    min: 1900,
-    max: 2099,
-    defaultValue: 1900,
+  text: {
+    type: String,
+    defaultValue: "",
   },
 
   published: {

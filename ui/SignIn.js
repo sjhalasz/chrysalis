@@ -15,10 +15,15 @@ export const SignIn = () => {
 
   const signIn = (e) => {
     e.preventDefault();
-    Meteor.loginWithPassword(email, password, (err) => {
+    if (!email) {
+      setError('Email is required.')
+    }
+    else if (!password) {
+      setError('Password is required.')
+    }
+    else Meteor.loginWithPassword(email, password, (err) => {
       if (err) {
-        console.error('Error signing in the user', err);
-        setError(err);
+        setError(err.reason);
         return;
       }
       navigate(RoutePaths.HOME);
@@ -30,7 +35,7 @@ export const SignIn = () => {
       <h3 className="px-3 py-2 text-lg text-base font-medium">
         Sign In
       </h3>
-      {<ErrorAlert message = {error && (error.reason || 'Unknown error') || '' }/> }
+      {<ErrorAlert message = { error }/> }
       <form className="mt-6 flex flex-col">
         <div className="flex flex-col space-y-4">
           <div className="">
@@ -76,6 +81,7 @@ export const SignIn = () => {
               onClick={signIn}
               type="submit"
               className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+              autoFocus
             >
               Sign In
             </button>

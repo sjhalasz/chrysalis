@@ -6,7 +6,7 @@ import { StoriesCollection } from '../collections/StoriesCollection';
 import { StoryRoles } from '../../infra/StoryRoles';
 
 Meteor.methods({
-  'story.insert'(args) {
+  'story.save'(args) {
     const { userId } = this;
     if (!userId) {
       throw Meteor.Error('Access denied');
@@ -14,16 +14,31 @@ Meteor.methods({
     if (!Roles.userIsInRole(userId, StoryRoles.PUBLISHER)) {
       throw new Error('Permission denied');
     }
-   
-    const {title, text, year, published } =  args;
-    return StoriesCollection.insert({
+    const {title, text, published } =  args;
+    const trimmedTitle = title.trim().replace(/\s+/g,' ').toLowerCase();
+    const trimmedText = text.trim();
+    if (!trimmedTitle){
+      throw new Meteor.Error('title blank', 'Title is required.');
+    }
+    else if (!trimmedText) {
+      throw new Meteor.Error('text required', 'Text is required.');
+    }
+    else {
+      const storiesCursor = StoriesCollection.find({trimmedTitle:trimmedTitle})
+      if( storiesCursor.count()) {
+        storiesCursor.forEach(doc => 
+          StoriesCollection.update({_id: doc._id},{$set:{title: title, text: text, published: published}}) 
+          );
+      }
+      else return StoriesCollection.insert({
+      trimmedTitle,
       title,
       text,
-      year,
       published,
       createdAt: new Date(),
       userId,
-    });
+    });}
+
   },
   'story.remove'(storyId) {
     const { userId } = this;
