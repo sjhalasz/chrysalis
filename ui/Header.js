@@ -24,7 +24,7 @@ export const Header = () => {
             {!isLoadingLoggedUser && loggedUser && (
             <a className="text-white cursor-pointer text-slate-200 hover:text-white"
                 onClick={() => navigate(RoutePaths.STORY)}>
-                  Stories
+                  Write Stories
               </a>
             )}
             <div>

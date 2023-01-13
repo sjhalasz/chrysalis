@@ -14,31 +14,39 @@ Meteor.methods({
     if (!Roles.userIsInRole(userId, StoryRoles.PUBLISHER)) {
       throw new Error('Permission denied');
     }
-    const {title, text, published } =  args;
+    const {storyId, title, text, published } =  args;
     const trimmedTitle = title.trim().replace(/\s+/g,' ').toLowerCase();
     const trimmedText = text.trim();
     if (!trimmedTitle){
       throw new Meteor.Error('title blank', 'Title is required.');
     }
+    else if (trimmedTitle.includes("*")) {
+      throw new Meteor.Error('title asterisk', 'Title cannot contain *.')
+    }
     else if (!trimmedText) {
       throw new Meteor.Error('text required', 'Text is required.');
     }
     else {
-      const storiesCursor = StoriesCollection.find({trimmedTitle:trimmedTitle})
+      const storiesCursor = StoriesCollection.find({_id:storyId})
       if( storiesCursor.count()) {
         storiesCursor.forEach(doc => 
-          StoriesCollection.update({_id: doc._id},{$set:{title: title, text: text, published: published}}) 
+          StoriesCollection.update({_id: doc._id},{$set:{trimmedTitle: trimmedTitle, title: title, text: text, published: published}}) 
           );
       }
-      else return StoriesCollection.insert({
+      else {
+        if(StoriesCollection.find({trimmedTitle: trimmedTitle}).count() != 0)
+        {
+          throw new Meteor.Error('duplicate name', 'This name already exists.');
+        }
+        else{
+        return StoriesCollection.insert({
       trimmedTitle,
       title,
       text,
       published,
       createdAt: new Date(),
       userId,
-    });}
-
+    });}}}
   },
   'story.remove'(storyId) {
     const { userId } = this;
