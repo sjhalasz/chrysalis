@@ -14,13 +14,14 @@ export const Story = () => {
     const [newStory, setNewStory] = React.useState(true);
     const [storyId, setStoryId] = React.useState('new story');
     const [needStoryId, setNeedStoryId] = React.useState(false);
+    const [unsavedChanges, setUnsavedChanges] = React.useState(false);
 
     const showError = ({ message }) => {
       setError(message);
       setTimeout(() => {
         setError('');
       }, 5000);
-      console.log(message);
+      return true;
     };
 
       const showSuccess = ({ message }) => {
@@ -39,7 +40,8 @@ export const Story = () => {
           errorResponse ?
           showError({ message: errorResponse.reason}) :
           showSuccess({ message:"Story saved."})+
-          setNeedStoryId(true)
+          setNeedStoryId(true)+
+          setUnsavedChanges(false);
           ;
         }
     );
@@ -52,7 +54,7 @@ export const Story = () => {
     return (
       <div className="items-center">
        <h3 className=" text-lg text-base font-medium">
-        Write Stories
+        Write Stories 
       </h3>
       {(newStory ? 
         (setStoryId("new story")+
@@ -83,6 +85,9 @@ export const Story = () => {
               id="select"
               value={title}
               onChange={(e) => {
+                (unsavedChanges && (e.preventDefault() || 
+                showError({message:'You have unsaved changes.'})
+                )) ||
                 setStoryId("") +
                 setError("") +
                 setSuccess("") +
@@ -117,6 +122,9 @@ export const Story = () => {
             <input
               id="title"
               value={title}
+              onInput={(e) => {
+                setUnsavedChanges(true);
+              }}
               onChange={(e) => setTitle(e.target.value)}
               className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               wrap="soft"
@@ -133,6 +141,9 @@ export const Story = () => {
             <textarea
               id="text"
               value={text}
+              onInput={(e) => {
+                setUnsavedChanges(true);
+              }}
               onChange={(e) => setText(e.target.value)}
               className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               wrap="soft"
@@ -145,7 +156,8 @@ export const Story = () => {
               type = "checkbox"
               id="publish"
               checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
+              onChange={(e) => setPublished(e.target.checked) +
+                setUnsavedChanges(true)}
               className=""
               wrap="soft"
             />
