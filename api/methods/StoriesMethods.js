@@ -8,6 +8,8 @@ import { StoryRoles } from '../../infra/StoryRoles';
 Meteor.methods({
   'story.save'(args) {
     const { userId } = this;
+    const userName = Meteor.user().username;
+
     if (!userId) {
       throw Meteor.Error('Access denied');
     };
@@ -40,6 +42,7 @@ Meteor.methods({
         }
         else{
         return StoriesCollection.insert({
+      userName,    
       trimmedTitle,
       title,
       text,
@@ -48,6 +51,7 @@ Meteor.methods({
       userId,
     });}}}
   },
+
   'story.remove'(storyId) {
     const { userId } = this;
     if (!userId) {

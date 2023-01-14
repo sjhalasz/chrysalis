@@ -9,3 +9,7 @@ Meteor.publish('myStories', function publishStories() {
 
   return StoriesCollection.find({ userId });
 });
+
+Meteor.publish('allStories', function publishAllStories() {
+  return StoriesCollection.find({published:true});
+});

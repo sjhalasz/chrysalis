@@ -4,6 +4,10 @@ import SimpleSchema from 'simpl-schema';
 export const StoriesCollection = new Mongo.Collection('stories');
 
 const StoriesSchema = new SimpleSchema({
+  userName: {
+    type: String,
+    defaultValue: "",
+  },
 
   title: {
     type: String,

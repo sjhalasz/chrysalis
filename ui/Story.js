@@ -68,7 +68,7 @@ export const Story = () => {
           setNeedStoryId(false);
         }
       }) : ''}
-      <div className='h-18'>
+      <div className='h-20'>
       {error ? <ErrorAlert message = {error} /> : <SuccessAlert message={success||helpMessage} />}
       </div>
       <form className="mt-1">
