@@ -15,6 +15,7 @@ export const Story = () => {
     const [storyId, setStoryId] = React.useState('new story');
     const [needStoryId, setNeedStoryId] = React.useState(false);
     const [unsavedChanges, setUnsavedChanges] = React.useState(false);
+    const [cursorPosition, setCursorPosition] = React.useState(0);
 
     const showError = ({ message }) => {
       setError(message);
@@ -30,7 +31,18 @@ export const Story = () => {
           setSuccess('');
         }, 5000);
       };
-     
+    
+      const keyHandler = (e) => {
+          var TABKEY = 9;
+          if(e.keyCode == TABKEY) {
+              this.value += "\t";
+              if(e.preventDefault) {
+                  e.preventDefault();
+              }
+              return false;
+          }
+      }
+
     const saveStory = () => {
       setError('');
       Meteor.call(
@@ -141,6 +153,16 @@ export const Story = () => {
             <textarea
               id="text"
               value={text}
+              onKeyDown = {(e) => {
+              return (e.key == 'Tab') ? 
+              'bad'===((setText(text.slice(0,e.target.selectionStart) +
+               '\t' + 
+               text.slice(e.target.selectionStart))) +
+               setCursorPosition( e.target.selectionStart + 1) +
+               e.preventDefault() +
+               (e.target.selectionEnd = e.target.selectionStart = cursorPosition))  : 
+               null
+              }}
               onInput={(e) => {
                 setUnsavedChanges(true);
               }}
