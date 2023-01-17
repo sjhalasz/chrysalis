@@ -6,8 +6,9 @@ import { StoriesCollection } from '../api/collections/StoriesCollection';
 import { useSubscribe, useFind } from 'meteor/react-meteor-data';
 
 export const Story = () => {
+    const initialText = '\t';
     const [title, setTitle] = React.useState(''); 
-    const [text, setText] = React.useState('');
+    const [text, setText] = React.useState(initialText);
     const [published, setPublished] = React.useState();
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
@@ -32,17 +33,6 @@ export const Story = () => {
         }, 5000);
       };
     
-      const keyHandler = (e) => {
-          var TABKEY = 9;
-          if(e.keyCode == TABKEY) {
-              this.value += "\t";
-              if(e.preventDefault) {
-                  e.preventDefault();
-              }
-              return false;
-          }
-      }
-
     const saveStory = () => {
       setError('');
       Meteor.call(
@@ -62,7 +52,7 @@ export const Story = () => {
   const isLoadingStories = useSubscribe('myStories');
   const storiesCursor = useFind(() => StoriesCollection.find({}));
   const helpMessage = "Select a story to edit, or select '* new story' to start a new one. When you're ready to make it public, click on the 'Publish Story' checkbox. Click on the 'Save Changes' button to save."
-
+  
     return (
       <div className="items-center">
        <h3 className=" text-lg text-base font-medium">
@@ -71,7 +61,7 @@ export const Story = () => {
       {(newStory ? 
         (setStoryId("new story")+
         setTitle("")+
-        setText("")+
+        setText(initialText)+
         setPublished(false)+ 
         setNewStory(false)
         ):"")}
@@ -154,11 +144,11 @@ export const Story = () => {
               id="text"
               value={text}
               onKeyDown = {(e) => {
-              return (e.key == 'Tab') ? 
-              'bad'===((setText(text.slice(0,e.target.selectionStart) +
-               '\t' + 
+              return (e.key == 'Enter') ? 
+              'foo'===((setText(text.slice(0,e.target.selectionStart) +
+               '\n\t' + 
                text.slice(e.target.selectionStart))) +
-               setCursorPosition( e.target.selectionStart + 1) +
+               setCursorPosition( e.target.selectionStart + 2) +
                e.preventDefault() +
                (e.target.selectionEnd = e.target.selectionStart = cursorPosition))  : 
                null
