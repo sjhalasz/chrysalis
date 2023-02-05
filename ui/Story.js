@@ -4,6 +4,7 @@ import { ErrorAlert } from './components/ErrorAlert';
 import { SuccessAlert } from './components/SuccessAlert';
 import { StoriesCollection } from '../api/collections/StoriesCollection';
 import { useSubscribe, useFind } from 'meteor/react-meteor-data';
+import { Tracker } from 'meteor/tracker' 
 
 {/* This enables a logged-in user to write and edit stories.  */}
 export const Story = () => {
@@ -31,7 +32,7 @@ export const Story = () => {
     {/* We will be handling the Enter key by inserting tab after it.  */}
     {/*   This is needed to preserve the position of the cursor in that case. */}
     const [cursorPosition, setCursorPosition] = React.useState(0);
-
+    const [waitingForGPT, setWaitingForGPT] = React.useState(false);
     {/* Function to display an error message for 5 seconds.  */}
     const showError = ({ message }) => {
       setError(message);
@@ -48,6 +49,16 @@ export const Story = () => {
         setSuccess('');
       }, 5000);
     };
+
+    const aiAssist = (response) => {
+      Meteor.call('story.aiassist'
+      , {storyId, text}
+      , (errorResponse) => {
+        console.log(errorResponse);
+      });
+      setWaitingForGPT(true);
+      setError("Please wait...");
+    }
 
     {/* saveStory is called when the Save Story button is clicked.  */}
     const saveStory = () => {
@@ -80,6 +91,30 @@ export const Story = () => {
     const storiesCursor = useFind(() => StoriesCollection.find({}));
     {/* Help message for this page.  */}
     const helpMessage = "Select a story to edit, or select '* new story' to start a new one. When you're ready to make it public, click on the 'Publish Story' checkbox. Click on the 'Save Changes' button to save."
+    {/* When AI Assist is used, the result of calling GPT is stored in */}
+    {/* MongoDB. This will refresh the text control in that case. */}
+    if(waitingForGPT){
+      storiesCursor.map((story) => {
+      /* If the current story is found in MongoDB... */
+      if(story._id == storyId){
+        if(story.gotGPT){
+        /* ... set the text from MongoDB */
+          setText(story.textGPT);
+          /* ... and turn off the trigger. */
+          setWaitingForGPT(false);
+          /* Turn off the wait message */
+          setError("");
+          /* Set story.gotGPT to false. */
+          Meteor.call('story.resetGotGPT',
+          { storyId },
+          (errorResponse) => {
+            errorResponse ?
+            showError({ message: errorResponse.reason}) : ''
+          }
+        );
+          }
+    }});
+  }
 
     {/* Return HTML for creating/editing stories.  */}
     return (
@@ -117,7 +152,7 @@ export const Story = () => {
       </div>
       {/* The input form for selecting story and entering  */}
       {/*   title, text, and publish switch.*/}
-      <form className="mt-1">
+      <form className="mt-1"      >
 
         {/* The select control. */}
           <div className="col-span-6 sm:col-span-6 lg:col-span-2"> 
@@ -140,6 +175,7 @@ export const Story = () => {
             <select
               id="select"
               value={title}
+              disabled = {waitingForGPT}
               onChange={(e) => {
                 (unsavedChanges && (e.preventDefault() || 
                 showError({message:'You have unsaved changes.'})
@@ -182,6 +218,7 @@ export const Story = () => {
             <input
               id="title"
               value={title}
+              disabled = {waitingForGPT}
               onInput={(e) => {
                 setUnsavedChanges(true);
               }}
@@ -208,6 +245,7 @@ export const Story = () => {
             <textarea
               id="text"
               value={text}
+              disabled = {waitingForGPT}
               onKeyDown = {(e) => {
                 return (e.key == 'Enter') 
                   ?'foo'===(
@@ -250,6 +288,17 @@ export const Story = () => {
             </label>
          </div> 
 
+         <div className="px-2 py-3 ">
+          <button 
+            type="button"
+            onClick={aiAssist}
+            className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 active:bg-orange-900"
+            disabled = {waitingForGPT}
+            >
+            AI Assist
+          </button>
+        </div> 
+
          {/* The Save Story button.  */}
          <div className="px-2 py-3 ">
           <button 
@@ -257,7 +306,8 @@ export const Story = () => {
             onClick={saveStory}
             className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 active:bg-orange-900"
             autoFocus
-          >
+            disabled = {waitingForGPT}
+            >
             Save Changes
           </button>
         </div> 
