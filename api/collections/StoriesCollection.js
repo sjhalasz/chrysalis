@@ -48,4 +48,4 @@ const StoriesSchema = new SimpleSchema({
   },
 });
 
-StoriesCollection.attachSchema(StoriesSchema);
+/* StoriesCollection.attachSchema(StoriesSchema); */

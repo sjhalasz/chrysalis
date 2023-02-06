@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { StoriesCollection } from '../api/collections/StoriesCollection';
 import { useSubscribe, useFind } from 'meteor/react-meteor-data';
 import { Loading } from './components/Loading';
-{/* Create a list of stories from all users where the stories are  */}
+{/* Create a list of stories from all users in which the stories are  */}
 {/*   flagged as 'published'. The viewer can scroll through the stories  */}
 {/*   using 'Previous' and 'Next' buttons. Logged-on users can also   */}
 {/*   add comments. */}
@@ -75,19 +75,22 @@ export const StoriesList = () => {
 {
   {/* Otherwise, load the newest story.  */}
   {/* When the page first loads, or when Next is clicked, direction is set to -1.  */}
+  previousExists = nextExists = false;
+  story = {userName:'', title:'', text:''};
   if(direction == -1){
     {/* Get a cursor pointing to the next two stories.  */}
-    {/* currentKey is initially the current moment, or when Next is clicked,  */}
+    {/* currentKey is initially the current moment, or, when Next is clicked,  */}
     {/*   the createdAt timestamp of the currently-displayed story. */}
     {/*   With reverse sorting, from latest to earliest, we want the next */}
     {/*   two stories that are earlier than the current story.  */}
     next = StoriesCollection.find(
-      {createdAt: {$lt: currentKey}}
+      {createdAt: {$lt: currentKey}, published: true}
       ,{sort:{createdAt: -1}, limit: 2}
     );
     {/* If there are two, there is another earlier one   */}
     {/*   so the Next button will be enabled. */}  
     nextExists = ( next.count() > 1);
+    if(next.count() > 0){
     {/* Retrieve the next earlier story from the cursor.  */}
     story = next.fetch()[0];
     {/* Check if there's a previous (older) story. */}
@@ -102,6 +105,7 @@ export const StoriesList = () => {
     );
     {/* We will enable the Previous button if one exists.  */}
     previousExists = (previous.count() > 0) ;
+  }
   }
   else {
     {/* Otherwise, the Previous button was clicked.  */}
@@ -130,12 +134,12 @@ export const StoriesList = () => {
              {/*   disabled={true/false} by including 'disabled' */}
              {/*   if true and omitting it if false. */}
              <button 
-               type="button"
+               type="button" 
                onClick={previousStory}
                className="disabled:opacity-50 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 active:bg-orange-900"
                disabled={!previousExists}
              >
-               Previous Story
+               Previous Story  
              </button>
              
              {/* The Next button.  */}

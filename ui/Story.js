@@ -9,9 +9,7 @@ import { Tracker } from 'meteor/tracker'
 {/* This enables a logged-in user to write and edit stories.  */}
 export const Story = () => {
     {/* initialText is what an empty story text starts with.  */}
-    {/*   We will use newline + tab when Enter is pressed, */}
-    {/*   but this will give first line indent of first paragraph. */}
-    const initialText = '\t';
+    const initialText = '';
     {/* These are the React variables for story data.  */}
     const [title, setTitle] = React.useState(''); 
     const [text, setText] = React.useState(initialText);
@@ -95,26 +93,27 @@ export const Story = () => {
     {/* MongoDB. This will refresh the text control in that case. */}
     if(waitingForGPT){
       storiesCursor.map((story) => {
-      /* If the current story is found in MongoDB... */
-      if(story._id == storyId){
-        if(story.gotGPT){
-        /* ... set the text from MongoDB */
-          setText(story.textGPT);
-          /* ... and turn off the trigger. */
-          setWaitingForGPT(false);
-          /* Turn off the wait message */
-          setError("");
-          /* Set story.gotGPT to false. */
-          Meteor.call('story.resetGotGPT',
-          { storyId },
-          (errorResponse) => {
-            errorResponse ?
-            showError({ message: errorResponse.reason}) : ''
+        /* If the current story is found in MongoDB... */
+        if(story._id == storyId){
+          if(story.gotGPT){
+          /* ... set the text from MongoDB */
+            setText(story.textGPT);
+            /* ... and turn off the trigger. */
+            setWaitingForGPT(false);
+            /* Turn off the wait message */
+            setError("");
+            /* Set story.gotGPT to false. */
+            Meteor.call('story.resetGotGPT',
+              { storyId },
+              (errorResponse) => {
+                errorResponse ?
+                showError({ message: errorResponse.reason}) : ''
+              }
+            );
           }
-        );
-          }
-    }});
-  }
+        }
+      });
+    }
 
     {/* Return HTML for creating/editing stories.  */}
     return (
@@ -164,11 +163,11 @@ export const Story = () => {
             </label>
             {/* The value is equal to the title.  */}
             {/*   On change, if unsaved changes, ignore selection */}
-            {/*   and give and error message.*/}
+            {/*   and give an error message.*/}
             {/*   Otherwise, clear errors and storyId and */}
             {/*   loop through all user's stories until you find*/}
             {/*   the one selected. It will be found unless the */}
-            {/*   user selected new story, in which case*/}
+            {/*   user selected new story, in which case */}
             {/*   newStory will be true and storyId will be empty.*/}
             {/*   For other than new story, the title, text and */}
             {/*   published switch are set from the database. */}
@@ -178,7 +177,7 @@ export const Story = () => {
               disabled = {waitingForGPT}
               onChange={(e) => {
                 (unsavedChanges && (e.preventDefault() || 
-                showError({message:'You have unsaved changes.'})
+                  showError({message:'You have unsaved changes.'})
                 )) ||
                 setStoryId("") +
                 setError("") +
@@ -190,7 +189,9 @@ export const Story = () => {
                   setTitle(story.title)+
                   setText(story.text)+
                   setPublished(story.published)+
-                  setStoryId(story._id)
+                  setStoryId(story._id)+
+                  /* in case there was a leftover flag from failed GPT assist */
+                  Meteor.call("story.resetGotGPT", {storyId:story._id})
                   ): ""}) 
                 }}
               className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
@@ -229,11 +230,8 @@ export const Story = () => {
           </div> 
 
           {/* The text control.   */}
-          {/*   onKeyDown captures the Enter key and adds a tab after*/}
-          {/*   The 'foo'=== forces return of false.*/}
-          {/*   The cursorPosition captures the selectionStart*/}
-          {/*   and then is used to set selectionStart and selectionEnd.*/}
-          {/*   I don't know why this works but it does. */}
+          {}
+          {}
 
           <div className="col-span-6 sm:col-span-3 lg:col-span-2">
             <label
@@ -246,14 +244,19 @@ export const Story = () => {
               id="text"
               value={text}
               disabled = {waitingForGPT}
+              /* onKeyDown captures the Enter key and adds an extra newline. */   
               onKeyDown = {(e) => {
                 return (e.key == 'Enter') 
+                  /* The 'foo'=== forces return of false.*/
                   ?'foo'===(
                     (setText(
                       text.slice(0,e.target.selectionStart) 
-                      + '\n\t' 
+                      + '\n\n' 
                       + text.slice(e.target.selectionStart))
                     ) 
+                    /* cursorPosition captures the selectionStart*/
+                    /* and then is used to set selectionStart and selectionEnd.*/
+                    /* I don't know why this works but it does. */
                     + setCursorPosition( e.target.selectionStart + 2) 
                     + e.preventDefault() 
                     + (e.target.selectionEnd = e.target.selectionStart = cursorPosition)
@@ -269,6 +272,7 @@ export const Story = () => {
               rows="8"
             />
          </div> 
+   
          {/* Checking this box causes story to be made public.  */}
          <div className="">
             <input
@@ -288,6 +292,7 @@ export const Story = () => {
             </label>
          </div> 
 
+         {/* This button calls OpenAI GPT to enhance the story.  */}
          <div className="px-2 py-3 ">
           <button 
             type="button"
