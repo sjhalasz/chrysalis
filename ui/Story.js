@@ -31,6 +31,9 @@ export const Story = () => {
     {/*   This is needed to preserve the position of the cursor in that case. */}
     const [cursorPosition, setCursorPosition] = React.useState(0);
     const [waitingForGPT, setWaitingForGPT] = React.useState(false);
+    {/* This is the value of storyId for unsaved stories. */}
+    const newStoryId = "new story";
+
     {/* Function to display an error message for 5 seconds.  */}
     const showError = ({ message }) => {
       setError(message);
@@ -49,13 +52,16 @@ export const Story = () => {
     };
 
     const aiAssist = (response) => {
-      Meteor.call('story.aiassist'
-      , {storyId, text}
-      , (errorResponse) => {
-        console.log(errorResponse);
-      });
-      setWaitingForGPT(true);
-      setError("Please wait...");
+      if(storyId == newStoryId){
+        showError({message:"Please save the story before using AI Assist."});
+      } else {
+        Meteor.call('story.aiassist'
+          , {storyId, text}
+          , (errorResponse) => {
+        });
+        setWaitingForGPT(true);
+        setError("Please wait...");
+    }
     }
 
     {/* saveStory is called when the Save Story button is clicked.  */}
@@ -125,7 +131,7 @@ export const Story = () => {
       {/*   first selects to add a new story. A blank new story */}
       {/*   is initialized, then the toggle is turned off. */}
       {(newStory ? 
-        (setStoryId("new story")+
+        (setStoryId(newStoryId)+
         setTitle("")+
         setText(initialText)+
         setPublished(false)+ 
@@ -238,7 +244,7 @@ export const Story = () => {
               htmlFor="text"
               className="block text-sm font-medium text-gray-700"
             >
-              Text of Story - Enter adds a tab for paragraph indent.
+              Text of Story 
             </label>
             <textarea
               id="text"

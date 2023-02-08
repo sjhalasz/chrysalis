@@ -13,6 +13,7 @@ export const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState();
 
+  /* Function to sign in the user. */
   const signIn = (e) => {
     e.preventDefault();
     if (!email) {
@@ -30,6 +31,7 @@ export const SignIn = () => {
     });
   };
 
+  /* HTML for sign in page. */
   return (
     <div className="flex flex-col items-center">
       <h3 className="px-3 py-2 text-lg text-base font-medium">
@@ -70,6 +72,8 @@ export const SignIn = () => {
             />
           </div>
         </div>
+
+        {/* Button to return home without signing in. */}
         <div className="flex justify-center py-3">
           <button
             onClick={() => navigate(RoutePaths.HOME)}
@@ -77,6 +81,8 @@ export const SignIn = () => {
           >
             Back to Home
           </button>
+
+          {/* Button to submit sign in. */}
             <button
               onClick={signIn}
               type="submit"
@@ -87,6 +93,7 @@ export const SignIn = () => {
             </button>
         </div>
 
+        {/* Link to switch to sign up page. */}
         <div className="py-3">
           <a
             className="cursor-pointer text-indigo-800"
@@ -96,6 +103,7 @@ export const SignIn = () => {
           </a>
         </div>
 
+        {/* Link to switch to forgot password page. */}
         <div className="py-3">
           <a
             className="cursor-pointer text-indigo-800"

@@ -23,7 +23,6 @@ aldeed:collection2
 matb33:collection-hooks
 quave:logged-user-react
 accounts-password
-quave:alert-react-tailwind
-quave:email-postmark
+quave:alert-react-tailwind     #quave:email-postmark
 alanning:roles
 fetch

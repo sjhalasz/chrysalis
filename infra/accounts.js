@@ -5,11 +5,13 @@ import { Roles } from 'meteor/alanning:roles';
 import { WalletsCollection } from '../api/collections/WalletsCollection';
 import { StoryRoles } from './StoryRoles';
 
+/*
 Accounts.emailTemplates.resetPassword.html = (user, url) =>
   `Hello,<br/><br/>Reset your password with this link: ${url}`;
 
 Accounts.urls.resetPassword = (token) =>
   Meteor.absoluteUrl(`${RoutePaths.RESET_PASSWORD.substring(1)}/${token}`);
+*/
 
 Accounts.onCreateUser((options, user) => {
   const customizedUser = { ...user };

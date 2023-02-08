@@ -54,7 +54,7 @@ Meteor.methods({
             trimmedTitle: trimmedTitle
             , title: title
             , text: text
-            , textGPT:''
+            , textGPT:"x"
             , gotGPT: false
             , published: published
             , createdAt: new Date()
@@ -75,7 +75,7 @@ Meteor.methods({
       trimmedTitle,
       title,
       text,
-      textGPT:'',
+      textGPT:"x",
       gotGPT: false,
       published,
       createdAt: new Date(),
@@ -106,12 +106,13 @@ Meteor.methods({
       const headers = {
         /* The OpenAI key for this GPT account.  */
         'Authorization': 'Bearer ' + Meteor.settings.GPTKey
+/*        'Authorization': 'Bearer ' + process.env.GPT_KEY */
+        
       };
 
       try {
         /* Send the request to GPT and get response.  */
         const response = await got.post(url, { json: params, headers: headers }).json();
-        console.log(response);
         const storiesCursor = StoriesCollection.find({_id:storyId})
         if( storiesCursor.count()) {
           storiesCursor.forEach(doc => 
@@ -138,7 +139,7 @@ Meteor.methods({
     return StoriesCollection.update(
       {_id: storyId}
       ,{$set:{
-        textGPT:'',
+        textGPT:"x",
         gotGPT: false }}
     ); 
   },

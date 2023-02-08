@@ -11,6 +11,7 @@ export const SignUp = () => {
   const [username, setUsername] = useState('');
   const [error, setError] = useState();
 
+  /* Function to sign up a new user. Navigates to home if successful. */
   const signUp = (e) => {
     e.preventDefault();
     if (!username) {
@@ -32,7 +33,7 @@ export const SignUp = () => {
     });
   };
 
-
+/* HTML for sign up page. */
   return (
     <div className="flex flex-col items-center">
       <h3 className="px-3 py-2 text-lg text-base font-medium">
@@ -88,6 +89,8 @@ export const SignUp = () => {
             />
           </div>
         </div>
+
+        {/* Button to quit sign up and go to home page. */}
         <div className="flex justify-center py-3">
           <button
             onClick={() => navigate(RoutePaths.HOME)}
@@ -95,6 +98,8 @@ export const SignUp = () => {
           >
             Back to Home
           </button>
+
+          {/* Button to submit sign up. */}
             <button
               onClick={signUp}
               type="submit"
@@ -105,6 +110,7 @@ export const SignUp = () => {
             </button>
         </div>
 
+        {/* Link to switch to sign in page. */}
         <div className="py-3">
           <a
             className="cursor-pointer text-indigo-800"

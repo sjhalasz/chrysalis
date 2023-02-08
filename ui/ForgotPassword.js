@@ -1,3 +1,4 @@
+/*
 import React, { useState } from 'react';
 import { useAlert } from 'meteor/quave:alert-react-tailwind';
 import { Accounts } from 'meteor/accounts-base';
@@ -76,3 +77,4 @@ export const ForgotPassword = () => {
     </div>
   );
 };
+*/

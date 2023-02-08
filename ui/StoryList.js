@@ -11,7 +11,8 @@ import { Loading } from './components/Loading';
 export const StoriesList = () => {
   {/* The 'allStories' Meteor publication allows the retrieval of  */}
   {/*   stories from any user where the story is flagged as 'published' */}
-  const isLoading = useSubscribe('allStories');
+  const isLoading = useSubscribe('allStories') ||
+    useSubscribe('allComments');
   {/* These React variables are used when paging through stories.  */}
   {/*   currentKey is set to the createdAt timestamp of the currently */}
   {/*   displayed story when the Previous or Next button is clicked.*/}
@@ -22,9 +23,9 @@ export const StoriesList = () => {
   const [direction, setDirection] = React.useState(-1);
  
   {/* nextStory is called when the 'Next' button is clicked.  */}
-  {/*   It sets direction to -1 to indicate reverse sort, and*/}
-  {/*   sets currentKey to be the createdAt timestamp of the*/}
-  {/*   currently-displayed story. Because these variables are*/}
+  {/*   It sets direction to -1 to indicate reverse sort, and */}
+  {/*   sets currentKey to be the createdAt timestamp of the */}
+  {/*   currently-displayed story. Because these variables are */}
   {/*   handled by React, this causes the story retrieval routine */}
   {/*   to be re-run.*/}
 
@@ -39,7 +40,7 @@ export const StoriesList = () => {
     setDirection(1);
     setCurrentKey(story.createdAt);
   }
-
+  
   {/* StoryItem formats the story. It displays the user name and the title. */}
   {/*   It then displays the story text underneath. In future it will also*/}
   {/*   display the comments and allow posting comments.*/}
@@ -57,13 +58,15 @@ export const StoriesList = () => {
         </div>
         </div>
           {/* The story text is displayed in a <pre> so that the  */}
-          {/*   tabs and newlines are shown as entered by the author,*/}
+          {/*   newlines are shown as entered by the author,*/}
           <pre 
           className="text-sm font-medium text-gray-500">
-          {/* The replace here does a word wrap within 64 characters.  */}
+          {/* The replace here does a word wrap within 42 characters.  */}
           {/*   With <pre> there is otherwise no word wrap. */}
-              {'\t' + story.text.replace(/(?![^\n]{1,64}$)([^\n]{1,64})\s/g, '$1\n')}
+              {"\n" + story.text.replace(/(?![^\n]{1,42}$)([^\n]{1,42})\s/g, '$1\n')}
           </pre>
+          <hr class=" h-1 my-4 bg-gray-200 border-0 rounded dark:bg-gray-700"/>
+          Comments:
     </>
   );
 
@@ -122,7 +125,7 @@ export const StoriesList = () => {
     {/* There is always a next if we got here by clicking Previous.  */}
     nextExists = true;
     {/* Get the story to display  */}
-    story = previous.fetch()[0];
+    if(previous.count() > 0) story = previous.fetch()[0];
   }
   }
   {/* This is the HTML to return to the page.  */}
@@ -156,7 +159,6 @@ export const StoriesList = () => {
            {/* Display the story. It is intentionally not handled  */}
            {/*   by React because we don't want the story to change */}
            {/*   or disappear while someone is reading it. */}
-           <StoryItem story = {story} 
-         />
+           <StoryItem story = {story} />
     </div>);
 }

@@ -13,6 +13,7 @@ export const Header = () => {
         <div className="flex w-full items-center justify-between border-b border-indigo-500 py-6 lg:border-none">
           <div className="flex grow items-center justify-between">
             <div>
+              {/* The logo as hyperlink that returns to home screen. */}
               <a
                 className="cursor-pointer"
                 onClick={() => navigate(RoutePaths.HOME)}
@@ -21,6 +22,7 @@ export const Header = () => {
                 <img className="h-10 w-auto" src="/images/logo.png" alt="" />
               </a>
             </div>
+            {/* If a user is logged on, display the link to write stories. */}
             {!isLoadingLoggedUser && loggedUser && (
             <a className="text-white cursor-pointer text-slate-200 hover:text-white"
                 onClick={() => navigate(RoutePaths.STORY)}>
@@ -28,6 +30,7 @@ export const Header = () => {
               </a>
             )}
             <div>
+              {/* When no user is logged on, display buttons to log in or sign up. */}
               {!isLoadingLoggedUser && !loggedUser && (
                 <>
                 <button
@@ -45,6 +48,7 @@ export const Header = () => {
               </button>
               </>
             )}
+            {/* When user is logged in, display user name and button to log out. */}
               {!isLoadingLoggedUser && loggedUser && (
               <>
               <div className="text-white">

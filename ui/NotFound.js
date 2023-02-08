@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RoutePaths } from './RoutePaths';
 
+/* Dispays 'page not found' message and link to go to home page. */
 export const NotFound = () => {
   const navigate = useNavigate();
   return (
