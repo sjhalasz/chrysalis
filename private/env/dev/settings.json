@@ -1,9 +1,0 @@
-{
-  "packages": {
-    "quave:email-postmark": {
-      "from": "noreply@gmail.com",
-      "apiToken": "fedd0c18-5c64-46c2-91f7-6070858e7249"
-    }
-  },
-  "GPTKey":"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"
-}

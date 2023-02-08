@@ -105,8 +105,8 @@ Meteor.methods({
       };
       const headers = {
         /* The OpenAI key for this GPT account.  */
-        'Authorization': 'Bearer ' + Meteor.settings.GPTKey
-/*        'Authorization': 'Bearer ' + process.env.GPT_KEY */
+/*        'Authorization': 'Bearer ' + Meteor.settings.GPTKey */
+        'Authorization': 'Bearer ' + process.env.GPT_KEY 
         
       };
 
