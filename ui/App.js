@@ -5,11 +5,14 @@ import { AlertProvider, Alert } from 'meteor/quave:alert-react-tailwind';
 
 import { Header } from './Header';
 import { Router } from './Router';
+import { Meteor } from 'meteor/meteor';
+
 
 export const App = () => (
   <BrowserRouter>
     <AlertProvider>
       <div>
+        {Meteor.logout()}
         <Header />
         <Alert />
         <div className="min-h-full">

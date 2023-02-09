@@ -39,7 +39,7 @@ Meteor.methods({
       else {
       /* This must be a new comment.  */
       /* Insert the new comment.  */
-    return StoriesCollection.insert({
+    return CommentsCollection.insert({
       storyId,
       userId,
       userName,    
