@@ -4,7 +4,6 @@ import { ErrorAlert } from './components/ErrorAlert';
 import { SuccessAlert } from './components/SuccessAlert';
 import { StoriesCollection } from '../api/collections/StoriesCollection';
 import { useSubscribe, useFind } from 'meteor/react-meteor-data';
-import { Tracker } from 'meteor/tracker' 
 
 {/* This enables a logged-in user to write and edit stories.  */}
 export const Story = () => {
@@ -30,9 +29,10 @@ export const Story = () => {
     {/* We will be handling the Enter key by inserting tab after it.  */}
     {/*   This is needed to preserve the position of the cursor in that case. */}
     const [cursorPosition, setCursorPosition] = React.useState(0);
-    const [waitingForGPT, setWaitingForGPT] = React.useState(false);
     {/* This is the value of storyId for unsaved stories. */}
     const newStoryId = "new story";
+    {/* Set to true so long as we're waiting for GPT to return. */}
+    const [waitingForGPT, setWaitingForGPT] = React.useState(false);
 
     {/* Function to display an error message for 5 seconds.  */}
     const showError = ({ message }) => {
@@ -52,16 +52,19 @@ export const Story = () => {
     };
 
     const aiAssist = (response) => {
-      if(storyId == newStoryId){
-        showError({message:"Please save the story before using AI Assist."});
-      } else {
         Meteor.call('story.aiassist'
-          , {storyId, text}
-          , (errorResponse) => {
-        });
-        setWaitingForGPT(true);
+          , {text}
+          , (error, response) => {
+            if(error){showError(error);} 
+            else {
+              setText(response);
+              console.log(response);
+              setError("");
+            }
+            setWaitingForGPT(false);
+          });
         setError("Please wait...");
-    }
+        setWaitingForGPT(true);
     }
 
     {/* saveStory is called when the Save Story button is clicked.  */}
@@ -94,38 +97,16 @@ export const Story = () => {
     {/* Get a cursor over all stories owned by this user.  */}
     const storiesCursor = useFind(() => StoriesCollection.find({}));
     {/* Help message for this page.  */}
-    const helpMessage = "Select a story to edit, or select '* new story' to start a new one. When you're ready to make it public, click on the 'Publish Story' checkbox. Click on the 'Save Changes' button to save."
-    {/* When AI Assist is used, the result of calling GPT is stored in */}
-    {/* MongoDB. This will refresh the text control in that case. */}
-    if(waitingForGPT){
-      storiesCursor.map((story) => {
-        /* If the current story is found in MongoDB... */
-        if(story._id == storyId){
-          if(story.gotGPT){
-          /* ... set the text from MongoDB */
-            setText(story.textGPT);
-            /* ... and turn off the trigger. */
-            setWaitingForGPT(false);
-            /* Turn off the wait message */
-            setError("");
-            /* Set story.gotGPT to false. */
-            Meteor.call('story.resetGotGPT',
-              { storyId },
-              (errorResponse) => {
-                errorResponse ?
-                showError({ message: errorResponse.reason}) : ''
-              }
-            );
-          }
-        }
-      });
-    }
+    const helpMessage = "Young people are eager to hear your story "
+      + "in order to learn from it. If you're not a good writer, "
+      + "don't worry. Just write what you want to share "
+      + "and use AI Assist to write the story for you.";
 
     {/* Return HTML for creating/editing stories.  */}
     return (
       <div className="items-center">
-       <h3 className=" text-lg text-base font-medium">
-        Write Stories 
+       <h3 className="text-center text-lg text-base font-medium">
+        TELL YOUR STORY 
       </h3>
       {/* newStory is a toggle that is set true when the user   */}
       {/*   first selects to add a new story. A blank new story */}
@@ -165,7 +146,7 @@ export const Story = () => {
               htmlFor="select"
               className="block text-sm font-medium text-gray-700"
             >
-              Select Story to Edit
+              Select story (edit or new)
             </label>
             {/* The value is equal to the title.  */}
             {/*   On change, if unsaved changes, ignore selection */}
@@ -195,9 +176,7 @@ export const Story = () => {
                   setTitle(story.title)+
                   setText(story.text)+
                   setPublished(story.published)+
-                  setStoryId(story._id)+
-                  /* in case there was a leftover flag from failed GPT assist */
-                  Meteor.call("story.resetGotGPT", {storyId:story._id})
+                  setStoryId(story._id)
                   ): ""}) 
                 }}
               className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"

@@ -1,10 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { Roles } from 'meteor/alanning:roles';
-import SimpleSchema from 'simpl-schema';
 import { StoriesCollection } from '../collections/StoriesCollection';
 import { StoryRoles } from '../../infra/StoryRoles';
-import {fetch, Headers} from 'meteor/fetch';
 
 process.env.GPT_KEY = 
   Buffer.from("c2stVzhkZlZsUExFZ244VDd1WkNxQUtUM0JsYmtGSm5nQkdFMVJZY0pZVEk1N1ROVVJ3", 'base64')
@@ -58,8 +56,6 @@ Meteor.methods({
             trimmedTitle: trimmedTitle
             , title: title
             , text: text
-            , textGPT:"x"
-            , gotGPT: false
             , published: published
             , createdAt: new Date()
           }}) 
@@ -79,8 +75,6 @@ Meteor.methods({
       trimmedTitle,
       title,
       text,
-      textGPT:"x",
-      gotGPT: false,
       published,
       createdAt: new Date(),
       userId,
@@ -88,14 +82,14 @@ Meteor.methods({
   },
 
    /* Method to use OpenAI GPT to enhance the story.  */
-  'story.aiassist'({storyId, text}){
+  'story.aiassist'({text}){
     /* text is the current, possibly unsaved text in the client.  */
     const got = require('got');
     /* prompt is what we ask GPT to do.  */
     const prompt = `write a story in first person based on the following facts: ` 
       + text;
 
-    (async () => {
+    return (async () => {
       const url = 'https://api.openai.com/v1/completions';
       const params = {
         "model": "text-davinci-003",
@@ -109,43 +103,16 @@ Meteor.methods({
       };
       const headers = {
         /* The OpenAI key for this GPT account.  */
-/*        'Authorization': 'Bearer ' + Meteor.settings.GPTKey */
         'Authorization': 'Bearer ' + process.env.GPT_KEY 
-        
       };
-
       try {
         /* Send the request to GPT and get response.  */
         const response = await got.post(url, { json: params, headers: headers }).json();
-        const storiesCursor = StoriesCollection.find({_id:storyId})
-        if( storiesCursor.count()) {
-          storiesCursor.forEach(doc => 
-            StoriesCollection.update(
-              /* Update textGPT field with response  */
-              /* and set the gotGPT flag to true   */
-              /* which will notify the client that the response is ready.   */
-              {_id: doc._id}
-              ,{$set:{
-                textGPT: response.choices[0].text
-                ,gotGPT: true 
-              }}
-            ) 
-          );
-        }
+        return response.choices[0].text;
       } catch (err) {
         console.log(err);
       }
     })();  
-  },
-
-  /* Reset gotGPT to false after client handles GPT response.  */
-  'story.resetGotGPT'({storyId}){
-    return StoriesCollection.update(
-      {_id: storyId}
-      ,{$set:{
-        textGPT:"x",
-        gotGPT: false }}
-    ); 
   },
 
   /* Deleting stories isn't currently used.  */
