@@ -12,7 +12,6 @@ export const App = () => (
   <BrowserRouter>
     <AlertProvider>
       <div>
-        {Meteor.logout()}
         <Header />
         <Alert />
         <div className="min-h-full">

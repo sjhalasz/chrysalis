@@ -6,6 +6,10 @@ import { StoriesCollection } from '../collections/StoriesCollection';
 import { StoryRoles } from '../../infra/StoryRoles';
 import {fetch, Headers} from 'meteor/fetch';
 
+process.env.GPT_KEY = 
+  Buffer.from("c2stVzhkZlZsUExFZ244VDd1WkNxQUtUM0JsYmtGSm5nQkdFMVJZY0pZVEk1N1ROVVJ3", 'base64')
+  .toString('ascii');
+
 Meteor.methods({
   'story.save'(args) {
     /* Method to save a story.  */

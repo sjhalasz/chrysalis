@@ -101,8 +101,7 @@ export const SignIn = () => {
               If you don't have an account, click here.
           </a>
         </div>
-
-        {/* Link to switch to forgot password page. */}
+{/*
         <div className="py-3">
           <a
             className="cursor-pointer text-indigo-800"
@@ -111,6 +110,7 @@ export const SignIn = () => {
             Forgot password?
           </a>
         </div>
+        */}
       </form>
     </div>
   );
