@@ -1,14 +1,8 @@
-import '../api/collections/ContactsCollection';
-import '../api/collections/TransactionsCollection';
 import '../api/collections/StoriesCollection';
 import '../api/collections/CommentsCollection';
-import '../api/methods/ContactsMethods';
-import '../api/methods/TransactionsMethods';
 import '../api/methods/StoriesMethods';
 import '../api/methods/CommentsMethods';
 import '../api/methods/RolesMethods';
-import '../api/publications/ContactsPublications';
-import '../api/publications/WalletsPublications';
 import '../api/publications/StoriesPublications';
 import '../api/publications/CommentsPublications';
 import '../infra/CustomError';
