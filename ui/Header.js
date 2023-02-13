@@ -56,7 +56,10 @@ export const Header = () => {
               </div>
               <button
                   className="font-bold text-white"
-                  onClick={() => Meteor.logout()}
+                  onClick={() => {
+                    Meteor.logout();
+                    navigate(RoutePaths.HOME);
+                  }}
                 >
                   Log Out
                 </button>

@@ -57,7 +57,7 @@ export const Story = () => {
           , (error, response) => {
             if(error){showError(error);} 
             else {
-              setText(response);
+              setText(response.trim());
               console.log(response);
               setError("");
             }
@@ -95,7 +95,7 @@ export const Story = () => {
 
     const isLoadingStories = useSubscribe('myStories');
     {/* Get a cursor over all stories owned by this user.  */}
-    const storiesCursor = useFind(() => StoriesCollection.find({}));
+    const storiesCursor = useFind(() => StoriesCollection.find({}),{sort:{createdAt: -1}});
     {/* Help message for this page.  */}
     const helpMessage = "Young people are eager to hear your story "
       + "in order to learn from it. If you're not a good writer, "
