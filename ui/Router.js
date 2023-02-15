@@ -11,7 +11,6 @@ import { LoggedUserOnly } from './components/LoggedUserOnly';
 import { AnonymousOnly } from './components/AnonymousOnly';
 import { AdminOnly } from './components/AdminOnly';
 import { Home } from './Home';
-import { PublisherOnly} from './components/PublisherOnly';
 
 export const Router = () => (
   <Routes>

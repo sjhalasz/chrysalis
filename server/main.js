@@ -8,4 +8,4 @@ import '../api/publications/CommentsPublications';
 import '../infra/CustomError';
 import '../infra/accounts';
 import '../infra/roles';
-import '../infra/StoryRoles';
+import '../infra/ApplicationRoles';

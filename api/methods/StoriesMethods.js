@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { Roles } from 'meteor/alanning:roles';
 import { StoriesCollection } from '../collections/StoriesCollection';
-import { StoryRoles } from '../../infra/StoryRoles';
 
 process.env.GPT_KEY = 
   Buffer.from("c2stVzhkZlZsUExFZ244VDd1WkNxQUtUM0JsYmtGSm5nQkdFMVJZY0pZVEk1N1ROVVJ3", 'base64')
@@ -23,10 +22,6 @@ Meteor.methods({
     if (!userId) {
       throw Meteor.Error('Access denied');
     };
-    /* Check to make sure this user is a publisher.  */
-    if (!Roles.userIsInRole(userId, StoryRoles.PUBLISHER)) {
-      throw new Error('Permission denied');
-    }
     /* Split out the arguments.  */
     const {storyId, title, text, published } =  args;
     /* Put the title in canonical form to prevent duplicate titles.  */
@@ -116,18 +111,4 @@ Meteor.methods({
     })();  
   },
 
-  /* Deleting stories isn't currently used.  */
-  'story.remove'(storyId) {
-    const { userId } = this;
-    if (!userId) {
-      throw Meteor.Error('Access denied');
-    }
-    check(storyId, String);
-
-    if (!Roles.userIsInRole(userId, StoryRoles.PUBLISHER)) {
-      throw new Error('Permission denied');
-    }
-
-    return StoriesCollection.remove(storyId);
-  },
 });
