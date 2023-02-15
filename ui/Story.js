@@ -67,22 +67,21 @@ export const Story = () => {
       }
     }
 
-    const getStory = (title) => {
+    const getStory = (newTitle) => {
       setError("");
       setSuccess("");
-      if(storyId == newStoryId){
-        setTitle("");
-        setText(initialText)
-        setPublished(false);
-      } else {
-        storiesCursor.map((story) => {
-          if(story.title == title){
+      setTitle("");
+      setText(initialText)
+      setPublished(false);
+      storiesCursor.map((story) => {
+        if(story.title == newTitle){
           setText(story.text);
           setTitle(story.title);
           setPublished(story.published);
           setStoryId(story._id);
-          }})}
-      }
+        }
+      })
+    }
   
     const selectStory = (e) => {
       if(unsavedChanges){

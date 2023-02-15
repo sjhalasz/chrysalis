@@ -1,8 +1,7 @@
+admin write settings file
 help msg in sign on
 email
-undo
 literal text file
 user page
 story id in url
-navigate home on startup
 delete node_modules
