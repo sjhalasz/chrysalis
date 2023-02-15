@@ -18,7 +18,7 @@ export const Header = () => {
                 className="cursor-pointer"
                 onClick={() => navigate(RoutePaths.HOME)}
               >
-                <span className="sr-only">Chrysalis Connection</span>
+                <span className="sr-only">Chrysalis Connection </span>
                 <img className="h-10 w-auto" src="/images/logo.png" alt="" />
               </a>
             </div>

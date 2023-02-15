@@ -60,6 +60,7 @@ Meteor.methods({
             , createdAt: new Date()
           }}) 
           );
+          return storyId;
       }
       else {
       /* This must be a new story.  */

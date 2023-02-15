@@ -1,12 +1,9 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-
+import { BrowserRouter, Route } from 'react-router-dom';
 import { AlertProvider, Alert } from 'meteor/quave:alert-react-tailwind';
-
 import { Header } from './Header';
 import { Router } from './Router';
 import { Meteor } from 'meteor/meteor';
-
 
 export const App = () => (
   <BrowserRouter>
