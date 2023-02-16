@@ -12,16 +12,14 @@ Meteor.methods({
 
     /* Magic to get user id and user name...  */
     const { userId } = this;
-    console.log(userId);
 
-    /* Make sure a user is logged on.  */
+    // Make sure a user is logged on.  
     if (!userId) {
       throw new Meteor.Error('Access denied');
     };
 
-    /* Make sure user is an admin.  */
+    // Make sure user is an admin.  
     if(!Roles.userIsInRole(userId, ApplicationRoles.ADMIN)){
-      console.log("user not admin")
       throw new Meteor.Error('Access denied');
     };  
 

@@ -7,9 +7,10 @@ Meteor.methods({
 
         const { userId } = this;
         if (!userId) {
-          throw new Error('Access denied');
+          return false;
         }
         const result = Roles.userIsInRole(userId, ApplicationRoles.ADMIN);
         return result;
+
       },
 });

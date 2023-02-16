@@ -2,10 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { Roles } from 'meteor/alanning:roles';
 import { StoriesCollection } from '../collections/StoriesCollection';
-
-process.env.GPT_KEY = 
-  Buffer.from("c2stVzhkZlZsUExFZ244VDd1WkNxQUtUM0JsYmtGSm5nQkdFMVJZY0pZVEk1N1ROVVJ3", 'base64')
-  .toString('ascii');
+import { SettingsCollection } from '../collections/SettingsCollection';
 
 Meteor.methods({
   'story.save'(args) {
@@ -99,7 +96,7 @@ Meteor.methods({
       };
       const headers = {
         /* The OpenAI key for this GPT account.  */
-        'Authorization': 'Bearer ' + process.env.GPT_KEY 
+        'Authorization': 'Bearer ' + JSON.parse(SettingsCollection.findOne({}).settings.settings).GPT_KEY
       };
       try {
         /* Send the request to GPT and get response.  */

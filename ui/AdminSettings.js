@@ -7,15 +7,14 @@ import { SuccessAlert } from './components/SuccessAlert';
 import { SettingsCollection } from '../api/collections/SettingsCollection';
 
 export const AdminSettings = () => {
-  const [oldSettings, setOldSettings] = React.useState("{}");
-  const [newSettings, setNewSettings] = React.useState("{}");
+  const [settings, setSettings] = React.useState("{}");
   const isLoading = useSubscribe('settings');
   const settingsCursor = useFind(() => SettingsCollection.find({}));
-  {/* These are used to display messages to the user.  */}
+  const [gotSettings, setGotSettings] = React.useState(false);
+ {/* These are used to display messages to the user.  */}
   const [error, setError] = React.useState('');
   const [success, setSuccess] = React.useState('');
-  const [gotSettings, setGotSettings] = React.useState(false);
-
+ 
   {/* Function to display an error message for 5 seconds.  */}
   const showError = ({ message }) => {
     setError(message);
@@ -33,13 +32,22 @@ export const AdminSettings = () => {
     }, 5000);
   };
   
-  const saveSettings = () => {
+  const saveSettings = (e) => {
+    e.preventDefault();
     {/* Clear any extant messages.  */}
     setError('');
     setSuccess('');
+    jsonOk = true;
+    try{
+      obj = JSON.parse(settings);
+    } catch(error){
+      showError({message:error.message});  
+      jsonOk = false;
+    } 
+    if(jsonOk){
     Meteor.call(
       'settings.save',
-      { settings:oldSettings },
+      { settings:settings },
       (error, response) => {
         if(error){
           showError({ message: error.reason}) 
@@ -48,6 +56,8 @@ export const AdminSettings = () => {
         }
       }
     );
+    }
+    return true;
   }
 
   if(isLoading()){
@@ -56,7 +66,7 @@ export const AdminSettings = () => {
 
     if(!gotSettings){
         settingsCursor.map((doc) => {
-          setOldSettings(doc.settings.settings);
+          setSettings(doc.settings.settings);
         });
         setGotSettings(true);
       }
@@ -78,8 +88,8 @@ export const AdminSettings = () => {
         >
           <textarea
             id="settings"
-            value={oldSettings}
-            onChange={(e) => setOldSettings(e.target.value)}
+            value={settings}
+            onChange={(e) => setSettings(e.target.value)}
             className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             wrap="soft"
             rows="8"
