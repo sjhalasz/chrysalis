@@ -4,6 +4,7 @@ import { Story } from './Story';
 import { NotFound } from './NotFound';
 import { SignIn } from './SignIn';
 import { SignUp } from './SignUp';
+import { Admin } from './Admin';
 import { RoutePaths } from './RoutePaths';
 import { ForgotPassword } from './ForgotPassword';
 import { ResetPassword } from './ResetPassword';
@@ -44,6 +45,15 @@ export const Router = () => (
         </AnonymousOnly>
       }
     />
+    <Route
+      path={RoutePaths.ADMIN}
+      element={
+        <AdminOnly>
+          <Admin />
+        </AdminOnly>
+      }
+    />
+
     <Route path="*" element={<NotFound />} />
   </Routes>
 );

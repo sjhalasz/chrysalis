@@ -13,7 +13,7 @@ export const LoggedUserOnly = ({ children }) => {
 
   if (!loggedUser) {
     return (
-      <Navigate to={RoutePaths.ACCESS} state={{ from: location }} replace />
+      <Navigate to={RoutePaths.HOME} state={{ from: location }} replace />
     );
   }
 

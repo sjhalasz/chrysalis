@@ -100,7 +100,6 @@ export const Story = () => {
       {/* Call the Meteor method to save the story.  */}
       {/*   The method will update the document for existing storyId */}
       {/*   or insert a new document if storyId does not exist. */}
-      {/*   needStoryId is set to true in case it was a new story. */}
       {/*   unsavedChanges is set to false because changes were saved. */}
       Meteor.call(
         'story.save',

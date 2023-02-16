@@ -1,9 +1,12 @@
 import '../api/collections/StoriesCollection';
+import '../api/collections/SettingsCollection';
 import '../api/collections/CommentsCollection';
 import '../api/methods/StoriesMethods';
+import '../api/methods/SettingsMethods';
 import '../api/methods/CommentsMethods';
 import '../api/methods/RolesMethods';
 import '../api/publications/StoriesPublications';
+import '../api/publications/SettingsPublications';
 import '../api/publications/CommentsPublications';
 import '../infra/CustomError';
 import '../infra/accounts';

@@ -7,6 +7,16 @@ import { useLoggedUser } from 'meteor/quave:logged-user-react';
 export const Header = () => {
   const navigate = useNavigate();
   const { loggedUser, isLoadingLoggedUser } = useLoggedUser();
+  const [isAdmin, setIsAdmin] = React.useState(false);
+
+  Meteor.call('roles.isAdmin', (error, isAdminReturn) => {
+    if (error) {
+      setIsAdmin(false);
+      return;
+    }
+    setIsAdmin(isAdminReturn);
+  });
+  
   return (
     <header className="bg-indigo-600">
       <nav className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8" aria-label="Top">
@@ -24,9 +34,19 @@ export const Header = () => {
             </div>
             {/* If a user is logged on, display the link to write stories. */}
             {!isLoadingLoggedUser && loggedUser && (
-            <a className="text-white cursor-pointer text-slate-200 hover:text-white"
-                onClick={() => navigate(RoutePaths.STORY)}>
+              <a 
+              className="cursor-pointer text-slate-200 hover:text-white"
+              onClick={() => navigate(RoutePaths.STORY)}
+              >
                   Write Stories
+              </a>
+            )}
+            {!isLoadingLoggedUser && loggedUser && isAdmin && (
+              <a 
+              className="cursor-pointer text-slate-200 hover:text-white"
+              onClick={() => navigate(RoutePaths.ADMIN)}
+              >
+              Admin Functions
               </a>
             )}
             <div>
