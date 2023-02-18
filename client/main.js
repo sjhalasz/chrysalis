@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from '../ui/App';
 import '../api/methods/CommentsMethods';
 import '../api/methods/StoriesMethods';
+import '../api/methods/AdminMethods';
 
 Meteor.startup(() => {
   Meteor.logout();

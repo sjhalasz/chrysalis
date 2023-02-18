@@ -1,7 +1,9 @@
-admin write settings file
 help msg in sign on
 email
 literal text file
 user page
 story id in url
 delete node_modules
+mongo in admin
+user profile
+psych test

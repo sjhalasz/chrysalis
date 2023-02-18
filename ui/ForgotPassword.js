@@ -10,7 +10,7 @@ import { SuccessAlert } from './components/SuccessAlert';
 export const ForgotPassword = () => {
   const { openAlert } = useAlert();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [, setEmail] = useState('');
   const [error, setError] = useState();
   const [success, setSuccess] = useState(false);
 

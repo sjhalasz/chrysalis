@@ -50,15 +50,24 @@ export const Story = () => {
     const aiAssist = (response) => {
       if(unsavedChanges){
         showError({message: "Please save changes before using AI Assist."})
+        console.log("aiassist: unsaved changes");
       } else {
+        console.log("aiassist: calling gpt");
         Meteor.call('story.aiassist'
           , {text}
           , (error, response) => {
-            if(error){showError(error);} 
-            else {
+            if(error){
+              showError({message:error.message});
+              console.log("aiassist: error from gpt");
+              console.log(error);
+            } else if(!response.trim()) {
+              showError({message:"I'm sorry, Open AI was not able to write your story."});
+            } else {
               setText(response.trim());
               setError("");
               setUnsavedChanges(true);
+              console.log("aiassist: successful return");
+              console.log(response);
             }
             setWaitingForGPT(false);
           });
@@ -68,6 +77,8 @@ export const Story = () => {
     }
 
     const getStory = (newTitle) => {
+      console.log("getstory: newTitle=" + newTitle);
+
       setError("");
       setSuccess("");
       setTitle("");
@@ -79,21 +90,25 @@ export const Story = () => {
           setTitle(story.title);
           setPublished(story.published);
           setStoryId(story._id);
+          console.log("getstory: story found");
         }
       })
     }
   
     const selectStory = (e) => {
       if(unsavedChanges){
+        console.log("selectstory: unsaved changes");
         e.preventDefault;
         showError({message:'You have unsaved changes. Save or cancel them before continuing.'});
       } else {
+        console.log("selectstory: " + e.target.value);
         getStory(e.target.value);
       }
     }
 
       {/* saveStory is called when the Save Story button is clicked.  */}
     const saveStory = () => {
+      console.log("savestory: update called");
       {/* Clear any extant messages.  */}
       setError('');
       setSuccess('');
@@ -111,16 +126,18 @@ export const Story = () => {
             setStoryId(response);
             setUnsavedChanges(false);
             showSuccess({ message:"Story saved."});
+            console.log("savestory: story saved");
           }
         }
       );
     }
 
     const revertStory = () => {
-        getStory(title);
-        setUnsavedChanges(false);
-        showSuccess({message: "Changes canceled."})
-      }
+      console.log("revertstory: ");
+      getStory(title);
+      setUnsavedChanges(false);
+      showSuccess({message: "Changes canceled."})
+    }
 
     {/* The myStories publication returns all stories owned by  */}
     {/*   the currently logged-in user. */}
@@ -157,7 +174,7 @@ export const Story = () => {
               htmlFor="select"
               className="block text-sm font-medium text-gray-700"
             >
-              Select story (edit or new)
+              Select story (new or edit)
             </label>
             {/* The value is equal to the title.  */}
             {/*   On change, if unsaved changes, ignore selection */}
@@ -189,7 +206,7 @@ export const Story = () => {
               htmlFor="title"
               className="block text-sm font-medium text-gray-700"
             >
-              Title of Story
+              Title
             </label>
             <input
               id="title"
@@ -213,7 +230,7 @@ export const Story = () => {
               htmlFor="text"
               className="block text-sm font-medium text-gray-700"
             >
-              Text of Story &nbsp;
+              Text  &nbsp;
          {/* This button calls OpenAI GPT to enhance the story.  */}
           <button 
             type="button"

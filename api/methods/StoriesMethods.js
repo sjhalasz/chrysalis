@@ -94,9 +94,16 @@ Meteor.methods({
         /*   to take in guessing the answer.*/
         "temperature": 0.5,
       };
+      const settings = SettingsCollection.find({}, {skip: 0, limit: 1}).fetch();
+      if(!settings[0]){throw new Meteor.Error(
+        {error:"settings empty"
+        , reason: "Settings not available."
+        }
+      );}
       const headers = {
         /* The OpenAI key for this GPT account.  */
-        'Authorization': 'Bearer ' + JSON.parse(SettingsCollection.findOne({}).settings.settings).GPT_KEY
+        'Authorization': 'Bearer ' + 
+          JSON.parse(settings[0].settings.settings).GPT_KEY
       };
       try {
         /* Send the request to GPT and get response.  */

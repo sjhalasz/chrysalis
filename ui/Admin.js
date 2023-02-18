@@ -1,5 +1,6 @@
 import React from 'react';
 import { AdminSettings } from './AdminSettings';
+import { AdminUsers } from './AdminUsers';
 
 export const Admin = () => (
     <>
@@ -7,5 +8,7 @@ export const Admin = () => (
             ADMIN FUNCTIONS
         </div>
         <AdminSettings />
+        <hr/>
+        <AdminUsers />
     </>
 );
