@@ -9,7 +9,9 @@ Meteor.publish('myStories', function publishStories() {
     throw Meteor.Error('Access denied');
   }
 
-  return StoriesCollection.find({ userId });
+  const userName = Meteor.user().username;
+
+  return StoriesCollection.find({ userName });
 });
 
 /* This is used to publish stories from all users. */

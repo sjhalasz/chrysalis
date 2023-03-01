@@ -1,6 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
-import SimpleSchema from 'simpl-schema';
 import { CommentsCollection } from '../collections/CommentsCollection';
 
 Meteor.methods({
@@ -41,7 +39,6 @@ Meteor.methods({
       /* Insert the new comment.  */
     return CommentsCollection.insert({
       storyId,
-      userId,
       userName,    
       parentId,
       text,

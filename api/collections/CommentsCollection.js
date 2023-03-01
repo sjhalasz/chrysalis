@@ -12,10 +12,6 @@ const CommentsSchema = new SimpleSchema({
     type: String,
   },
 
-  userId: {
-    type: String,
-  },
-
   parentId: {
     type: String,
     defaultValue:""

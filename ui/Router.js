@@ -12,6 +12,8 @@ import { LoggedUserOnly } from './components/LoggedUserOnly';
 import { AnonymousOnly } from './components/AnonymousOnly';
 import { AdminOnly } from './components/AdminOnly';
 import { Home } from './Home';
+import { Stories } from './Stories';
+import { Profile } from './Profile';
 
 export const Router = () => (
   <Routes>
@@ -19,6 +21,18 @@ export const Router = () => (
       path={RoutePaths.HOME}
       element={
           <Home />
+      }
+    />
+ <Route
+      path={RoutePaths.STORIES}
+      element={
+          <Stories />
+      }
+    />
+ <Route
+      path={RoutePaths.PROFILE}
+      element={
+          <Profile />
       }
     />
  <Route

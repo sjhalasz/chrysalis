@@ -56,8 +56,8 @@ Meteor.methods({
       }
       else {
       /* This must be a new story.  */
-      /* Make sure there is not already a story with this canonical name.  */
-        if(StoriesCollection.find({trimmedTitle: trimmedTitle}).count() != 0)
+      /* Make sure this user doesn't already have a story with this canonical name.  */
+        if(StoriesCollection.find({userId: userId, trimmedTitle: trimmedTitle}).count() != 0)
         {
           throw new Meteor.Error('duplicate name', 'This name already exists.');
         }

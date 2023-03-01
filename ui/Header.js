@@ -3,6 +3,7 @@ import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { RoutePaths } from './RoutePaths';
 import { useLoggedUser } from 'meteor/quave:logged-user-react';
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -54,15 +55,15 @@ export const Header = () => {
               {!isLoadingLoggedUser && !loggedUser && (
                 <>
                 <button
-                  className="font-bold text-white"
-                  onClick={() => navigate(RoutePaths.SIGNIN)}
+              className="cursor-pointer text-slate-200 hover:text-white"
+              onClick={() => navigate(RoutePaths.SIGNIN)}
                 >
                   Sign In
                 </button>
                 <div/> 
                 <button
-                className="font-bold text-white"
-                onClick={() => navigate(RoutePaths.SIGNUP)}
+              className="cursor-pointer text-slate-200 hover:text-white"
+              onClick={() => navigate(RoutePaths.SIGNUP)}
               >
                 Sign Up
               </button>
@@ -71,12 +72,19 @@ export const Header = () => {
             {/* When user is logged in, display user name and button to log out. */}
               {!isLoadingLoggedUser && loggedUser && (
               <>
-              <div className="text-white">
+              <div >
+              <button
+                  onClick={() => {
+                    navigate(RoutePaths.PROFILE);
+                  }}
+                  className="cursor-pointer text-slate-200 hover:text-white"
+              >
                 {loggedUser.username}
+              </button>
               </div>
               <button
-                  className="font-bold text-white"
-                  onClick={() => {
+              className="cursor-pointer text-slate-200 hover:text-white"
+              onClick={() => {
                     Meteor.logout();
                     navigate(RoutePaths.HOME);
                   }}

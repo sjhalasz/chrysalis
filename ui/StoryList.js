@@ -5,7 +5,8 @@ import { CommentsCollection } from '../api/collections/CommentsCollection';
 import { useSubscribe, useFind } from 'meteor/react-meteor-data';
 import { Loading } from './components/Loading';
 import { useLoggedUser } from 'meteor/quave:logged-user-react';
-
+import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 {/* Create a list of stories from all users in which the stories are  */}
 {/*   flagged as 'published'. The viewer can scroll through the stories  */}
@@ -25,7 +26,6 @@ export const StoriesList = () => {
   const [currentKey, setCurrentKey] = React.useState(new Date());
   {/*   The direction variable is -1 for 'Next' and 1 for 'Previous'*/}
   const [direction, setDirection] = React.useState(-1);
-  const [newComment, setNewComment] = React.useState(false); 
   const { loggedUser, isLoadingLoggedUser } = useLoggedUser();
 
   {/* nextStory is called when the 'Next' button is clicked.  */}
@@ -58,7 +58,13 @@ export const StoriesList = () => {
           {story.title}
         </p>
         <div className="flex-shrink-0">
-          by {story.userName}
+          by &nbsp;
+          <Link
+          className='underline hover:font-bold' 
+          to={"/stories/" + story.userId}
+          >
+            {story.userName}
+          </Link>
         </div>
 
         </div>
@@ -114,7 +120,10 @@ export const StoriesList = () => {
   {/* In case there are no published stories... */}
   previousExists = nextExists = false;
   story = {_id:'', userName:'', title:'', text:''};
-  
+  query = {published: true };
+  if(useParams()._id){
+    query.userId = useParams()._id;
+  }
   {/* When the page first loads, or when Next is clicked, direction is set to -1.  */}
   if(direction == -1){
     {/* Get a cursor pointing to the next two stories.  */}
@@ -122,28 +131,24 @@ export const StoriesList = () => {
     {/*   the createdAt timestamp of the currently-displayed story. */}
     {/*   With reverse sorting, from latest to earliest, we want the next */}
     {/*   two stories that are earlier than the current story.  */}
-    next = StoriesCollection.find(
-      {createdAt: {$lt: currentKey}, published: true}
-      ,{sort:{createdAt: -1}, limit: 2}
-    );
+    query.createdAt = {$lt: currentKey};
+    next = StoriesCollection.find(query,{sort:{createdAt: -1}, limit: 2}).fetch();
     {/* If there are two, there is another earlier one   */}
     {/*   so the Next button will be enabled. */}  
-    nextExists = ( next.count() > 1);
-    if(next.count() > 0){
-    {/* Retrieve the next earlier story from the cursor.  */}
-    story = next.fetch()[0];
-    {/* Check if there's a previous (older) story. */}
-    {/*   This is necessary to disable the Previous button when the*/}
-    {/*   page is first loaded.*/}
-    {/*   With ascending sort, earliest to latest story,*/}
-    {/*   find the next story that is later than the story*/}
-    {/*   we just retrieved.*/}
-    var  previous = StoriesCollection.find(
-      {createdAt: {$gt: story.createdAt}}
-      ,{sort:{createdAt: 1}, limit: 1}
-    );
-    {/* We will enable the Previous button if one exists.  */}
-    previousExists = (previous.count() > 0) ;
+    nextExists = ( next.length > 1);
+    if(next.length > 0){
+      {/* Retrieve the next earlier story from the cursor.  */}
+      story = next[0];
+      {/* Check if there's a previous (older) story. */}
+      {/*   This is necessary to disable the Previous button when the*/}
+      {/*   page is first loaded.*/}
+      {/*   With ascending sort, earliest to latest story,*/}
+      {/*   find the next story that is later than the story*/}
+      {/*   we just retrieved.*/}
+      query.createdAt = {$gt: story.createdAt};
+      previous = StoriesCollection.find(query, {sort:{createdAt: 1}, limit: 1}).fetch();
+      { /* We will enable the Previous button if one exists.  */}
+      previousExists = (previous.length > 0) ;
     }
   }
 
@@ -152,17 +157,16 @@ export const StoriesList = () => {
     {/*   Get a cursor with ascending sort, earliest to latest,*/}
     {/*   with createdAt greater than the story that was displayed */}
     {/*   when Previous was clicked. */}
-    previous = StoriesCollection.find(
-      {createdAt: {$gt: currentKey}}
-      ,{sort:{createdAt: 1}, limit: 2}
-    );
+    query.createdAt = {$gt: currentKey};
+
+    previous = StoriesCollection.find(query,{sort:{createdAt: 1}, limit: 2}).fetch();
     {/* We will enable the Previous button if there are at least 2,  */}
     {/*   the one we are about to display and another one. */}
-    previousExists = (previous.count() > 1) ;
+    previousExists = (previous.length > 1) ;
     {/* There is always a next if we got here by clicking Previous.  */}
     nextExists = true;
     {/* Get the story to display  */}
-    if(previous.count() > 0) story = previous.fetch()[0];
+    if(previous.length > 0) story = previous[0];
   }
   
   {/* This is the HTML to return to the page.  */}
