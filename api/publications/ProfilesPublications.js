@@ -14,7 +14,5 @@ Meteor.publish('myProfile', function publishAllProfiles() {
       if (!userId) {
         throw new Meteor.Error('Access denied');
       };
-  const username = Meteor.user().username;
-  console.log(username);
-  return ProfilesCollection.find({username: username});
+  return ProfilesCollection.find({userId});
 });

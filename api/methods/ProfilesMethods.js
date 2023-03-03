@@ -28,6 +28,7 @@ Meteor.methods({
       /* This must be a new profile.  */
       /* Insert the new profile.  */
       return ProfilesCollection.insert({
+        userId,
         username,
         profile
       });

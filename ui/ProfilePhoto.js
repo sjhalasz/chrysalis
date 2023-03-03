@@ -4,7 +4,9 @@ import { useSubscribe, useFind } from 'meteor/react-meteor-data';
 import { useState } from 'react';
 
 export const ProfilePhoto = () => {
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState({
+    photo:"/images/add-contact-icon.png"
+  });
 
   {/* Get a cursor over profile for this user.  */}
   const isLoadingProfiles = useSubscribe('myProfile');
@@ -26,6 +28,7 @@ export const ProfilePhoto = () => {
   
   function handleSelected(e) {
     const fileInput = document.querySelector('input[type="file"]');
+    if(fileInput.files[0].size > 50000){window.alert("File too large");return;}
     const reader = new FileReader();
     addListeners(reader);
     reader.readAsDataURL(fileInput.files[0]);
@@ -34,9 +37,21 @@ export const ProfilePhoto = () => {
   return (
     <div>
       <br/>
-      <input type="file" onChange = {handleSelected} accept="image/*" /> 
-      <img src={profile.photo} height="200" alt="" />
-    </div>
-     
+      <input 
+        type="file" 
+        id="input-file" 
+        onChange = {handleSelected} 
+        accept="image/*" 
+        className="hidden"
+      /> 
+      <label htmlFor="input-file">
+        <img 
+          position="relative"
+          src={profile.photo} 
+          height="200" 
+          alt="Click to select an image." 
+        />
+      </label>
+    </div>    
   )
 }
