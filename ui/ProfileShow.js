@@ -20,6 +20,9 @@ export const ProfileShow = () => {
     <div>
       <br/>
       <img src={profile.photo} height="200" alt="" />
+      <div>
+        {profile.text}
+      </div>
     </div>
      
   )

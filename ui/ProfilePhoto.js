@@ -46,7 +46,6 @@ export const ProfilePhoto = () => {
       /> 
       <label htmlFor="input-file">
         <img 
-          position="relative"
           src={profile.photo} 
           height="200" 
           alt="Click to select an image." 
