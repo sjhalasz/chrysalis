@@ -24,16 +24,6 @@ const StoriesSchema = new SimpleSchema({
     defaultValue: "",
   },
 
-  textGPT: {
-    type: String,
-    defaultValue: "",
-  },
-
-  gotGPT: {
-    type: Boolean,
-    defaultValue: false,
-  },
-
   published: {
     type: Boolean,
     defaultValue: false,
