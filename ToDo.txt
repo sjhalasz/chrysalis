@@ -9,3 +9,5 @@ user profile
 psych test
 limit size of input fields
 backup and restore
+shutdown
+upgrade meteor

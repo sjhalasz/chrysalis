@@ -3,11 +3,11 @@ import React from 'react';
 
 export const AdminUsers = () => {
     const [users, setUsers] = React.useState([]);
-
+    
     Meteor.call('users.retrieve'
       , {}
       , (error, response) => {
-        if(error){console.log(error);} 
+        if(error){} 
         else {
             setUsers(response);
         }

@@ -6,6 +6,7 @@ import '../api/methods/StoriesMethods';
 import '../api/methods/SettingsMethods';
 import '../api/methods/CommentsMethods';
 import '../api/methods/ProfilesMethods';
+import '../api/methods/ShutdownMethods';
 import '../api/methods/AdminMethods';
 import '../api/methods/RolesMethods';
 import '../api/publications/StoriesPublications';

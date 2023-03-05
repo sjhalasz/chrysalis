@@ -4,8 +4,9 @@ import {ApplicationRoles} from '../../infra/ApplicationRoles';
 
 Meteor.methods({
   'users.retrieve'() {
+    if(Meteor.isServer){
     /* Magic to get user id and user name...  */
-    const { userId } = this;
+    const userId  = Meteor.userId();
 
     /* Make sure a user is logged on.  */
     if (!userId) {
@@ -19,4 +20,5 @@ Meteor.methods({
   
     return Meteor.users.find({}).fetch();
   }
+}
 });

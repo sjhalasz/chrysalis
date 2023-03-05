@@ -5,6 +5,7 @@ import { App } from '../ui/App';
 import '../api/methods/CommentsMethods';
 import '../api/methods/StoriesMethods';
 import '../api/methods/AdminMethods';
+import '../api/methods/ShutdownMethods';
 
 Meteor.startup(() => {
   Meteor.logout();

@@ -3,12 +3,27 @@ import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { RoutePaths } from './RoutePaths';
 import { useLoggedUser } from 'meteor/quave:logged-user-react';
-import { Link } from "react-router-dom";
+import { Tracker } from 'meteor/tracker';
 
 export const Header = () => {
   const navigate = useNavigate();
   const { loggedUser, isLoadingLoggedUser } = useLoggedUser();
   const [isAdmin, setIsAdmin] = React.useState(false);
+
+  Tracker.autorun(() => {
+    Meteor.call('shutdown',{},(error, response) => {
+      if(error) console.log(error);
+      else if(response){
+        // This regex splits the url into parts.
+        const href = window.location.href.match(/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/);
+        // Element [5] is the part after the domain.
+        if(href[5] != RoutePaths.SHUTDOWN
+          && href[5] != RoutePaths.SIGNIN) 
+            navigate(RoutePaths.SHUTDOWN);
+      }
+    });  
+  });
+
 
   Meteor.call('roles.isAdmin', (error, isAdminReturn) => {
     if (error) {

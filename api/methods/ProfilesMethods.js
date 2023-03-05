@@ -1,8 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { ProfilesCollection } from '../collections/ProfilesCollection';
+import { Shutdown } from './Shutdown';
 
 Meteor.methods({
   'profiles.save'(profile) {
+   // if(Shutdown()) throw new Meteor.Error("System shut down.");
     /* Method to save a profile.  */
     /* If the profile already exists, it will update it.  */
     /* Otherwise it will insert a new profile.  */

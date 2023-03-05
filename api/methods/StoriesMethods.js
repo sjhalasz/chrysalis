@@ -3,9 +3,11 @@ import { check } from 'meteor/check';
 import { Roles } from 'meteor/alanning:roles';
 import { StoriesCollection } from '../collections/StoriesCollection';
 import { SettingsCollection } from '../collections/SettingsCollection';
+import { Shutdown } from './Shutdown';
 
 Meteor.methods({
   'story.save'(args) {
+    if(Shutdown()) throw new Meteor.Error("System shut down.");
     /* Method to save a story.  */
     /* If the story already exists, it will update it.  */
     /* Otherwise it will insert a new story.  */
@@ -76,6 +78,7 @@ Meteor.methods({
 
    /* Method to use OpenAI GPT to enhance the story.  */
   'story.aiassist'({text}){
+    if(Shutdown()) throw new Meteor.Error("System shut down.");
     /* text is the current, possibly unsaved text in the client.  */
     const got = require('got');
     /* prompt is what we ask GPT to do.  */

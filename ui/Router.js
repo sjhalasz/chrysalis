@@ -14,6 +14,7 @@ import { AdminOnly } from './components/AdminOnly';
 import { Home } from './Home';
 import { Stories } from './Stories';
 import { Profile } from './Profile';
+import { Shutdown } from './Shutdown';
 
 export const Router = () => (
   <Routes>
@@ -33,6 +34,12 @@ export const Router = () => (
       path={RoutePaths.PROFILE}
       element={
           <Profile />
+      }
+    />
+ <Route
+      path={RoutePaths.SHUTDOWN}
+      element={
+          <Shutdown />
       }
     />
  <Route

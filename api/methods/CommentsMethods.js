@@ -1,8 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { CommentsCollection } from '../collections/CommentsCollection';
+import { Shutdown } from './Shutdown';
 
 Meteor.methods({
   'comments.save'(args) {
+    if(Shutdown()) throw new Meteor.Error("System shut down.");
+    
     /* Method to save a comment.  */
     /* If the comment already exists, it will update it.  */
     /* Otherwise it will insert a new comment.  */
