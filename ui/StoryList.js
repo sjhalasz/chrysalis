@@ -17,7 +17,7 @@ export const StoriesList = () => {
   {/*   stories from any user where the story is flagged as 'published' */}
   const isLoadingAllStories = useSubscribe('allStories');
   const isLoadingAllComments = useSubscribe('allComments');
-  const isLoading = isLoadingAllStories || isLoadingAllComments; 
+  const isLoading = isLoadingAllStories() || isLoadingAllComments(); 
   {/* These React variables are used when paging through stories.  */}
   {/*   currentKey is set to the createdAt timestamp of the currently */}
   {/*   displayed story when the Previous or Next button is clicked.*/}
@@ -112,7 +112,7 @@ export const StoriesList = () => {
   );
 
   {/* When the page is loading. give an appropriate message.  */}
-  if (isLoading()) {
+  if (isLoading) {
     return <Loading />;
   }
   else {

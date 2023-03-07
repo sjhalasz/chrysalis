@@ -12,7 +12,7 @@ export const Story = () => {
     {/* These are the React variables for story data.  */}
     const [title, setTitle] = React.useState(''); 
     const [text, setText] = React.useState(initialText);
-    const [published, setPublished] = React.useState();
+    const [published, setPublished] = React.useState(false);
     {/* These are used to display messages to the user.  */}
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
@@ -24,8 +24,6 @@ export const Story = () => {
     {/* We will be handling the Enter key by inserting tab after it.  */}
     {/*   This is needed to preserve the position of the cursor in that case. */}
     const [cursorPosition, setCursorPosition] = React.useState(0);
-    {/* This is the value of storyId for unsaved stories. */}
-    const newStoryId = "new story";
     {/* Set to true so long as we're waiting for GPT to return. */}
     const [waitingForGPT, setWaitingForGPT] = React.useState(false);
     const newStoryTitle = "* new story";
@@ -56,7 +54,7 @@ export const Story = () => {
           , (error, response) => {
             if(error){
               showError({message:error.message});
-            } else if(!response.trim()) {
+            } else if(!response ||!response.trim()) {
               showError({message:"I'm sorry, Open AI was not able to write your story."});
             } else {
               setText(response.trim());

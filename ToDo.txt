@@ -2,7 +2,7 @@ help msg in sign on
 email
 literal text file
 story id in url
-delete node_modules
 psych test
 limit size of input fields
 upgrade meteor
+cordoba
